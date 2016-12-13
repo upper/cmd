@@ -79,7 +79,11 @@ func main() {
 		Build: &ctx,
 	}
 
-	paths := gotool.ImportPaths(flags.Args())
+	importCtx := gotool.Context{
+		BuildContext: ctx,
+	}
+
+	paths := importCtx.ImportPaths(flags.Args())
 
 	rest, err := loadcfg.FromArgs(paths, true)
 
@@ -99,15 +103,17 @@ func main() {
 		for _, f := range pkgInfo.Files {
 			ast.Inspect(f, func(n ast.Node) bool {
 				if expr, ok := n.(*ast.ExprStmt); ok {
-					exprFn := expr.X.(*ast.CallExpr)
-					if tv, ok := pkgInfo.Info.Types[exprFn]; ok {
-						if matchType(tv.Type.String()) {
-							pos := program.Fset.Position(exprFn.Pos())
+					switch exprFn := expr.X.(type) {
+					case *ast.CallExpr:
+						if tv, ok := pkgInfo.Info.Types[exprFn]; ok {
+							if matchType(tv.Type.String()) {
+								pos := program.Fset.Position(exprFn.Pos())
 
-							var buf bytes.Buffer
-							format.Node(&buf, program.Fset, exprFn)
+								var buf bytes.Buffer
+								format.Node(&buf, program.Fset, exprFn)
 
-							fmt.Printf("%s:%d:%d %v\n", pos.Filename, pos.Line, pos.Column, string(buf.Bytes()))
+								fmt.Printf("%s:%d:%d %v\n", pos.Filename, pos.Line, pos.Column, string(buf.Bytes()))
+							}
 						}
 					}
 				}
