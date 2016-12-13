@@ -15,17 +15,21 @@ import (
 	"golang.org/x/tools/go/loader"
 )
 
-// TODO: Look for interfaces rather than for specific type names.
+// TODO: Look for interfaces instead of fixed type names.
 var lookForTypes = []string{
 	"upper.io/db.v2/lib/sqlbuilder.Selector",
 	"upper.io/db.v2/lib/sqlbuilder.Inserter",
 	"upper.io/db.v2/lib/sqlbuilder.Updater",
 	"upper.io/db.v2/lib/sqlbuilder.Deleter",
+	"upper.io/db.v2/lib/sqlbuilder.Deleter",
+	"upper.io/db.v2.Result",
+	"upper.io/db.v2.Union",
+	"upper.io/db.v2.Intersection",
 }
 
 func matchType(name string) bool {
 	for _, t := range lookForTypes {
-		if t == name {
+		if strings.HasSuffix(name, t) {
 			return true
 		}
 	}
@@ -103,7 +107,7 @@ func main() {
 							var buf bytes.Buffer
 							format.Node(&buf, program.Fset, exprFn)
 
-							fmt.Printf("%s:%d:%d %s\n", pos.Filename, pos.Line, pos.Column, buf)
+							fmt.Printf("%s:%d:%d %v\n", pos.Filename, pos.Line, pos.Column, string(buf.Bytes()))
 						}
 					}
 				}
