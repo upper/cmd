@@ -21,10 +21,17 @@ var lookForTypes = []string{
 	"upper.io/db.v2/lib/sqlbuilder.Inserter",
 	"upper.io/db.v2/lib/sqlbuilder.Updater",
 	"upper.io/db.v2/lib/sqlbuilder.Deleter",
-	"upper.io/db.v2/lib/sqlbuilder.Deleter",
 	"upper.io/db.v2.Result",
 	"upper.io/db.v2.Union",
 	"upper.io/db.v2.Intersection",
+
+	"upper.io/db.v3/lib/sqlbuilder.Selector",
+	"upper.io/db.v3/lib/sqlbuilder.Inserter",
+	"upper.io/db.v3/lib/sqlbuilder.Updater",
+	"upper.io/db.v3/lib/sqlbuilder.Deleter",
+	"upper.io/db.v3.Result",
+	"upper.io/db.v3.Union",
+	"upper.io/db.v3.Intersection",
 }
 
 func matchType(name string) bool {
